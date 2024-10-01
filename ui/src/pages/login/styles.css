@@ -1,0 +1,26 @@
+.login-card {
+  width: 60%;
+  max-width: 700px;
+  margin: 50px auto;
+  padding: 30px;
+}
+
+.alert-wrapper {
+  width: 60%;
+  max-width: 400px;
+  padding: 16px;
+  border: 1px solid var(--lighweight-color);
+}
+
+@media only screen and (max-width: 600px) {
+  .login-card {
+    width: 100%;
+    margin: 16px auto;
+    padding: 16px;
+  }
+
+  .alert-wrapper {
+    width: 90%;
+    max-width: 500px;
+  }
+}

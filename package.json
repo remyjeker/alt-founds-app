@@ -1,0 +1,19 @@
+{
+  "name": "vega-app",
+  "private": true,
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "install-api": "cd api && npm install",
+    "install-ui": "cd ui && npm install",
+    "prepare-submodules": "npm run install-api && npm run install-ui",
+    "prepare": "npm run prepare-submodules",
+    "start-api": "cd api && npm start",
+    "start-ui": "cd ui && ionic serve",
+    "start": "concurrently --kill-others \"npm run start-api\" \"npm run start-ui\"",
+    "init": "npm run prepare && npm run start"
+  },
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  }
+}

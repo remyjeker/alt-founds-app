@@ -1,0 +1,10 @@
+/* For information on how to create your own theme, please see:
+http://ionicframework.com/docs/theming/ */
+
+:root {
+  --base-bgColor: #343434;
+  --lighweight-bgColor: #999999;
+  --lighweight-color: #808080;
+
+  --base-font-color: #e6e6e6;
+}

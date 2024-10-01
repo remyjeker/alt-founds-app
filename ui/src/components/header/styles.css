@@ -1,0 +1,17 @@
+ion-toolbar {
+  --color: var(--base-font-color);
+}
+
+.profile-image {
+  padding: 2px;
+  height: 36px;
+  width: 36px;
+  border: 1px solid var(--base-font-color);
+  border-radius: 50%;
+}
+
+.space-between {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}

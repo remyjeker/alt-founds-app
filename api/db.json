@@ -1,0 +1,27 @@
+{
+  "users": [
+    {
+      "id": "1e743ed3-0dcd-4125-9d46-3b6013a74e95",
+      "username": "admin",
+      "password": "adminpass",
+      "email": "admin.admin@xyz.com",
+      "image": "https://dummyjson.com/icon/emilys/128",
+      "accessToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJlbWlseXMiLCJlbWFpbCI6ImVtaWx5LmpvaG5zb25AeC5kdW1teWpzb24uY29tIiwiZmlyc3ROYW1lIjoiRW1pbHkiLCJsYXN0TmFtZSI6IkpvaG5zb24iLCJnZW5kZXIiOiJmZW1hbGUiLCJpbWFnZSI6Imh0dHBzOi8vZHVtbXlqc29uLmNvbS9pY29uL2VtaWx5cy8xMjgiLCJpYXQiOjE3Mjc3NzA3NTMsImV4cCI6MTcyNzc3NDM1M30.iO3G5KqhYOcAamQWG0gvd4i6dQCvUWW9YgmDQeHtU2c",
+      "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJlbWlseXMiLCJlbWFpbCI6ImVtaWx5LmpvaG5zb25AeC5kdW1teWpzb24uY29tIiwiZmlyc3ROYW1lIjoiRW1pbHkiLCJsYXN0TmFtZSI6IkpvaG5zb24iLCJnZW5kZXIiOiJmZW1hbGUiLCJpbWFnZSI6Imh0dHBzOi8vZHVtbXlqc29uLmNvbS9pY29uL2VtaWx5cy8xMjgiLCJpYXQiOjE3Mjc3NzA3NTMsImV4cCI6MTczMDM2Mjc1M30.SLZirsLBs1CYvYqdI_TPOJhpkbFHk9_uow10WXJGEdI"
+    }
+  ],
+  "assets": {
+    "1e743ed3-0dcd-4125-9d46-3b6013a74e95": [
+      {
+        "id": "81d86ff1-9e76-45e3-8083-118eddbd2f7a",
+        "type": "crypto",
+        "name": "APPL"
+      },
+      {
+        "id": "13ffcbe2-8822-4647-bf02-945c5658a3a9",
+        "type": "fiat",
+        "name": "XYZ"
+      }
+    ]
+  }
+}
