@@ -21,6 +21,11 @@
         "id": "13ffcbe2-8822-4647-bf02-945c5658a3a9",
         "type": "fiat",
         "name": "XYZ"
+      },
+      {
+        "id": "c7ff60c6-0000-46e7-8818-f424b95c0360",
+        "type": "stock",
+        "name": "HUWS"
       }
     ]
   }

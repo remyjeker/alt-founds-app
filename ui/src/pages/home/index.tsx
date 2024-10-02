@@ -25,77 +25,88 @@ import "./styles.css";
 const pageTitle = TITLES.MAIN;
 
 const Home: React.FC = () => {
-  // const [showLoading, setShowLoading] = useState<boolean>(true);
+  const [showLoading, setShowLoading] = useState<boolean>(false);
+  const [showError, setShowError] = useState<boolean>(false);
 
-  // TODO: HANDLING ERROR HERE
   const {
     data: allAssets,
-    isLoading: isAllAssetsLoading,
-    // isError: isAllAssetsError,
-    // refetch,
+    isLoading: isAssetsLoading,
+    isError: isAssetsError,
+    failureReason: errorMessage,
   } = useQuery({
     queryKey: ["getAssets"],
     queryFn: getAssets,
+    retry: 1,
   });
 
-  useEffect(() => {
-    // console.log("mounting", allAssets, isAllAssetsLoading);
-  }, []);
+  // useEffect(() => {
+  //   console.log(
+  //     "--- CHANGES ---",
+  //     "allAssets: " + allAssets,
+  //     "isAssetsLoading: " + isAssetsLoading,
+  //     "isAssetsError: " + isAssetsError,
+  //     "errorMessage: " + errorMessage
+  //   );
+  // }, [allAssets, isAssetsLoading, isAssetsError, errorMessage]);
 
   useEffect(() => {
-    // console.log("isAllAssetsLoading", isAllAssetsLoading);
-  }, [isAllAssetsLoading]);
+    setShowLoading(isAssetsLoading);
+  }, [isAssetsLoading]);
+
+  useEffect(() => {
+    if (isAssetsError && errorMessage) {
+      setShowError(true);
+    }
+  }, [isAssetsError]);
 
   return (
     <IonPage>
       <Header title={pageTitle} />
       <IonContent>
-        {isAllAssetsLoading ? (
-          <IonLoading isOpen={true} spinner="circles" message="Loading..." />
-        ) : (
-          <IonReactRouter>
-            <IonTabs>
-              <IonRouterOutlet>
-                <Redirect exact path="/" to="/home" />
-                <Route
-                  path="/home"
-                  render={() => (
-                    <div>
-                      <h1>Home</h1>
-                      <span>{JSON.stringify(allAssets)}</span>
-                    </div>
-                  )}
-                  exact={true}
-                />
-                <Route
-                  path="/table"
-                  render={() => <h1>Table</h1>}
-                  exact={true}
-                />
-                <Route
-                  path="/history"
-                  render={() => <h1>History</h1>}
-                  exact={true}
-                />
-              </IonRouterOutlet>
+        <IonReactRouter>
+          <IonTabs>
+            <IonRouterOutlet>
+              <Redirect exact path="/" to="/home" />
+              <Route
+                path="/home"
+                render={() => (
+                  <div className="ion-padding">
+                    <h1>Home</h1>
+                    {allAssets && <span>{JSON.stringify(allAssets)}</span>}
+                    {showError && <span>{String(errorMessage)}</span>}
+                  </div>
+                )}
+                exact={true}
+              />
+              <Route path="/table" render={() => <h1>Table</h1>} exact={true} />
+              <Route
+                path="/history"
+                render={() => <h1>History</h1>}
+                exact={true}
+              />
+            </IonRouterOutlet>
 
-              <IonTabBar slot="bottom">
-                <IonTabButton tab="home" href="/home">
-                  <IonIcon icon={pieChart} />
-                  <IonLabel>Portfolio</IonLabel>
-                </IonTabButton>
-                <IonTabButton tab="table" href="/table">
-                  <IonIcon icon={barChart} />
-                  <IonLabel>Table</IonLabel>
-                </IonTabButton>
-                <IonTabButton tab="history" href="/history">
-                  <IonIcon icon={analytics} />
-                  <IonLabel>History</IonLabel>
-                </IonTabButton>
-              </IonTabBar>
-            </IonTabs>
-          </IonReactRouter>
-        )}
+            <IonTabBar slot="bottom">
+              <IonTabButton tab="home" href="/home">
+                <IonIcon icon={pieChart} />
+                <IonLabel>Portfolio</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="table" href="/table">
+                <IonIcon icon={barChart} />
+                <IonLabel>Table</IonLabel>
+              </IonTabButton>
+              <IonTabButton tab="history" href="/history">
+                <IonIcon icon={analytics} />
+                <IonLabel>History</IonLabel>
+              </IonTabButton>
+            </IonTabBar>
+          </IonTabs>
+        </IonReactRouter>
+        <IonLoading
+          isOpen={showLoading}
+          spinner="circles"
+          message="Loading..."
+        />
       </IonContent>
     </IonPage>
   );

@@ -60,7 +60,7 @@ app.post("/api/login", async (req: express.Request, res: express.Response) => {
 
   if (userExists) {
     if (isPasswordMatching(userExists, userCredentials.password)) {
-      const { password, ...userPublicProps } = userExists;
+      const { password, ...userPublicProps }: UserProfile = userExists;
 
       return res.json(userPublicProps);
     } else {
