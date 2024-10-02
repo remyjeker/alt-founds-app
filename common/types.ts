@@ -7,15 +7,21 @@ export type LoginRequest = {
   body: LoginParams;
 };
 
-export type LoginResponse = {
+export type LoginSuccessResponse = {
   status: Number;
-  data?: UserProfile;
-  response?: {
-    data?: {
-      message?: String;
+  data: UserProfile;
+};
+
+export type GlobalErrorResponse = {
+  status: Number;
+  response: {
+    data: {
+      message: String;
     };
   };
 };
+
+export type LoginResponse = LoginSuccessResponse | GlobalErrorResponse;
 
 export type UserProfile = {
   accessToken: String;
@@ -27,21 +33,28 @@ export type UserProfile = {
   username: String;
 };
 
-// ASSETS
-
-export type GetAssetsQueryParams = {
-  userId: String;
+export type AuthRequestQueryParams = {
+  userId?: String;
+  asOf?: String;
 };
 
-export type GetAssetsResponse = {
+export type GetAssetsSuccessResponse = {
   status: Number;
-  data?: Assets[];
-  response?: {
-    data?: {
-      message?: String;
+  data: Asset[];
+};
+
+export type GetAssetsErrorResponse = {
+  status: Number;
+  response: {
+    data: {
+      message: String;
     };
   };
 };
+
+export type GetAssetsResponse =
+  | GetAssetsSuccessResponse
+  | GetAssetsErrorResponse;
 
 export enum AssetTypes {
   "fiat",
@@ -49,17 +62,39 @@ export enum AssetTypes {
   "stock",
 }
 
-export type Assets = {
+export type Asset = {
   id: String;
   type: AssetTypes;
   name: String;
 };
 
-// DB
-
 export type DbData = {
   users: UserProfile[];
-  assets: {
-    [id: string]: Assets[];
+  assets: Asset[];
+  portfolios: {
+    [id: string]: Portfolio;
   };
+};
+
+export type GetPortfolioQueryParams = {
+  userId: String;
+};
+
+export type GetPortfolioSuccessResponse = {
+  status: Number;
+  data: Portfolio;
+};
+
+export type Position = {
+  id: String;
+  asset: String;
+  quantity: Number;
+  asOf: String;
+  price: Number;
+};
+
+export type Portfolio = {
+  id: String;
+  asOf: String;
+  positions: Position[];
 };

@@ -1,5 +1,6 @@
-import { Redirect, Route } from "react-router-dom";
+import { useEffect } from "react";
 import { IonRouterOutlet } from "@ionic/react";
+import { Redirect, Route, useLocation } from "react-router-dom";
 
 import Login from "./../pages/login";
 import Home from "./../pages/home";
@@ -30,24 +31,32 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }: any) => {
 
 interface AppRouterProps {}
 
-const AppRouter: React.FC<AppRouterProps> = () => (
-  <IonRouterOutlet>
-    <Route exact path={PATHNAMES.HOME}>
-      <ProtectedRoute>
-        <Home />
-      </ProtectedRoute>
-    </Route>
+const AppRouter: React.FC<AppRouterProps> = () => {
+  const location = useLocation();
 
-    <Route exact path={PATHNAMES.LOGIN}>
-      <Login />
-    </Route>
+  // useEffect(() => {
+  //   console.log("--------- LOCATION CHANGED", location);
+  // }, [location]);
 
-    <Route exact path={PATHNAMES.ROOT}>
-      <Redirect to={DEFAULT_PAGE} />
-    </Route>
+  return (
+    <IonRouterOutlet>
+      <Route exact path={PATHNAMES.HOME}>
+        <ProtectedRoute>
+          <Home />
+        </ProtectedRoute>
+      </Route>
 
-    <Redirect to={PATHNAMES.ROOT} />
-  </IonRouterOutlet>
-);
+      <Route exact path={PATHNAMES.LOGIN}>
+        <Login />
+      </Route>
+
+      <Route exact path={PATHNAMES.ROOT}>
+        <Redirect to={DEFAULT_PAGE} />
+      </Route>
+
+      <Redirect to={PATHNAMES.ROOT} />
+    </IonRouterOutlet>
+  );
+};
 
 export default AppRouter;

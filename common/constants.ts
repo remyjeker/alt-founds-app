@@ -6,6 +6,8 @@ export const PATHNAMES = {
 
 export const TITLES = {
   MAIN: "Financial portfolio",
+  ACCOUNT: "Account",
+  CURRENT_BALANCE: "Current Balance",
 };
 
 export const STORAGE_KEYS = {
@@ -15,6 +17,8 @@ export const STORAGE_KEYS = {
   USER_ID: "user-id",
   USERNAME: "username",
 };
+
+export const CURRENT_CURRENCY = "USD";
 
 export const AUTH_STATUS = {
   CONNECTED: "connected",

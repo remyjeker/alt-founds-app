@@ -10,18 +10,72 @@
       "refreshToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwidXNlcm5hbWUiOiJlbWlseXMiLCJlbWFpbCI6ImVtaWx5LmpvaG5zb25AeC5kdW1teWpzb24uY29tIiwiZmlyc3ROYW1lIjoiRW1pbHkiLCJsYXN0TmFtZSI6IkpvaG5zb24iLCJnZW5kZXIiOiJmZW1hbGUiLCJpbWFnZSI6Imh0dHBzOi8vZHVtbXlqc29uLmNvbS9pY29uL2VtaWx5cy8xMjgiLCJpYXQiOjE3Mjc3NzA3NTMsImV4cCI6MTczMDM2Mjc1M30.SLZirsLBs1CYvYqdI_TPOJhpkbFHk9_uow10WXJGEdI"
     }
   ],
-  "assets": {
-    "1e743ed3-0dcd-4125-9d46-3b6013a74e95": [
-      {
-        "id": "81d86ff1-9e76-45e3-8083-118eddbd2f7a",
-        "type": "crypto",
-        "name": "APPL"
-      },
-      {
-        "id": "13ffcbe2-8822-4647-bf02-945c5658a3a9",
-        "type": "fiat",
-        "name": "XYZ"
-      }
-    ]
+  "assets": [
+    {
+      "id": "81d86ff1-9e76-45e3-8083-118eddbd2f7a",
+      "type": "crypto",
+      "name": "BITCOIN"
+    },
+    {
+      "id": "c7ff60c6-0000-46e7-8818-f424b95c0360",
+      "type": "stock",
+      "name": "HUWS"
+    },
+    {
+      "id": "13ffcbe2-8822-4647-bf02-945c5658a3a9",
+      "type": "fiat",
+      "name": "SYAH"
+    },
+    {
+      "id": "1e8e9171-eb9e-4be6-8e2e-b8bca7e7ff7a",
+      "type": "crypto",
+      "name": "ETHERUM"
+    },
+    {
+      "id": "2d3d813f-a91c-492a-a369-4f54d96b7fc4",
+      "type": "stock",
+      "name": "QUIP"
+    },
+    {
+      "id": "998ef682-a2e4-4b11-b7bb-90151fd94904",
+      "type": "fiat",
+      "name": "BEMU"
+    }
+  ],
+  "portfolios": {
+    "1e743ed3-0dcd-4125-9d46-3b6013a74e95": {
+      "id": "f3e2e173-0018-442c-bd25-cfb66ddfe3b5",
+      "asOf": "2014/10/01",
+      "positions": [
+        {
+          "id": "78174a53-ec7b-4105-bb5d-65178b99c3c7",
+          "asset": "81d86ff1-9e76-45e3-8083-118eddbd2f7a",
+          "quantity": 0.45,
+          "asOf": "2014/09/01",
+          "price": 54521.93
+        },
+        {
+          "id": "8d14ec15-8814-4799-bd44-3d216ef15f4d",
+          "asset": "81d86ff1-9e76-45e3-8083-118eddbd2f7a",
+          "quantity": 0.12,
+          "asOf": "2014/09/07",
+          "price": 52520.0
+        },
+        {
+          "id": "a168cd75-45ee-46d3-9c4d-e285730dc31a",
+          "asset": "c7ff60c6-0000-46e7-8818-f424b95c0360",
+          "quantity": 4.0,
+          "asOf": "2014/10/01",
+          "price": 898.01
+        },
+        {
+          "id": "3dc2b5fe-7313-46a1-abbd-dc98412108f3",
+          "asset": "13ffcbe2-8822-4647-bf02-945c5658a3a9",
+          "quantity": 750,
+          "asOf": "2014/10/01",
+          "price": 10.0
+        }
+      ]
+    }
   }
 }
