@@ -18,15 +18,46 @@
         "name": "APPL"
       },
       {
-        "id": "13ffcbe2-8822-4647-bf02-945c5658a3a9",
-        "type": "fiat",
-        "name": "XYZ"
-      },
-      {
         "id": "c7ff60c6-0000-46e7-8818-f424b95c0360",
         "type": "stock",
         "name": "HUWS"
       }
+    ],
+    "1e743ed3-0dcd-4125-9d46-3b6013a74e99": [
+      {
+        "id": "13ffcbe2-8822-4647-bf02-945c5658a3a9",
+        "type": "fiat",
+        "name": "XYZ"
+      }
     ]
+  },
+  "portfolios": {
+    "1e743ed3-0dcd-4125-9d46-3b6013a74e95": {
+      "id": "f3e2e173-0018-442c-bd25-cfb66ddfe3b5",
+      "asOf": "2014/10/01",
+      "positions": [
+        {
+          "id": "78174a53-ec7b-4105-bb5d-65178b99c3c7",
+          "asset": "81d86ff1-9e76-45e3-8083-118eddbd2f7a",
+          "quantity": 4,
+          "asOf": "2014/09/01",
+          "price": 12345.6
+        },
+        {
+          "id": "8d14ec15-8814-4799-bd44-3d216ef15f4d",
+          "asset": "81d86ff1-9e76-45e3-8083-118eddbd2f7a",
+          "quantity": 4,
+          "asOf": "2014/09/15",
+          "price": 350.0
+        },
+        {
+          "id": "a168cd75-45ee-46d3-9c4d-e285730dc31a",
+          "asset": "c7ff60c6-0000-46e7-8818-f424b95c0360",
+          "quantity": 4,
+          "asOf": "2014/10/01",
+          "price": 888.001
+        }
+      ]
+    }
   }
 }

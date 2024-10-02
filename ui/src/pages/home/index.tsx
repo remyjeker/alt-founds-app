@@ -18,7 +18,7 @@ import {
 import Header from "../../components/header";
 import BalanceChart from "../../components/balanceChart";
 
-import { getAssets } from "../../httpClient";
+import { getAssets, getPortfolio } from "../../httpClient";
 import { TITLES } from "../../../../common/constants";
 
 import "./styles.css";
@@ -30,13 +30,24 @@ const Home: React.FC = () => {
   const [showError, setShowError] = useState<boolean>(false);
 
   const {
-    data: allAssets,
+    data: userAssets,
     isError: isAssetsError,
     isLoading: isAssetsLoading,
-    failureReason: errorMessage,
+    failureReason: assetsErrorMessage,
   } = useQuery({
     queryKey: ["getAssets"],
     queryFn: getAssets,
+    retry: 1,
+  });
+
+  const {
+    data: userPortfolio,
+    isError: isPortfolioError,
+    isLoading: isPortfolioLoading,
+    failureReason: portfolioErrorMessage,
+  } = useQuery({
+    queryKey: ["getPortfolio"],
+    queryFn: getPortfolio,
     retry: 1,
   });
 
@@ -50,11 +61,14 @@ const Home: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    setShowLoading(isAssetsLoading);
-  }, [isAssetsLoading]);
+    // setShowLoading(isAssetsLoading);
+    setShowLoading(isAssetsLoading || isPortfolioLoading);
+  }, [isAssetsLoading, isPortfolioLoading]);
 
   useEffect(() => {
-    if (isAssetsError && errorMessage) {
+    if (isAssetsError && assetsErrorMessage) {
+      // setErrorMessage(assetsErrorMessage)
+      // setErrorMessage(portfolioErrorMessage)
       setShowError(true);
     }
   }, [isAssetsError]);
@@ -68,7 +82,9 @@ const Home: React.FC = () => {
             <IonRouterOutlet>
               <Route
                 path="/home"
-                render={() => <BalanceChart assets={allAssets} />}
+                render={() => (
+                  <BalanceChart assets={userAssets} portfolio={userPortfolio} />
+                )}
                 exact={true}
               />
               <Route path="/table" render={() => <h1>Table</h1>} exact={true} />
@@ -97,7 +113,7 @@ const Home: React.FC = () => {
         </IonReactRouter>
 
         {/* TODO HERE */}
-        {showError && <span>{String(errorMessage)}</span>}
+        {showError && <span>{String(assetsErrorMessage)}</span>}
 
         <IonLoading
           isOpen={showLoading}

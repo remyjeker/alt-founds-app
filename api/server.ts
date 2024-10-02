@@ -3,10 +3,12 @@ import cors from "cors";
 import { JSONFilePreset } from "lowdb/node";
 
 import {
-  Assets,
+  Asset,
   DbData,
   GetAssetsQueryParams,
+  GetPortfolioQueryParams,
   LoginRequest,
+  Portfolio,
   UserProfile,
 } from "../common/types";
 
@@ -24,7 +26,7 @@ app.use(
   })
 );
 
-const defaultData: DbData = { users: [], assets: {} };
+const defaultData: DbData = { users: [], assets: {}, portfolios: {} };
 
 const db = await JSONFilePreset<DbData>("db.json", defaultData);
 
@@ -91,7 +93,7 @@ app.get("/api/assets", async (req: express.Request, res: express.Response) => {
 
   const { assets }: DbData = db.data;
 
-  const userAssets: Assets[] | null = assets[String(userId)] || null;
+  const userAssets: Asset[] | null = assets[String(userId)] || null;
 
   if (!userAssets) {
     return res.status(ERROR_STATUS.NOT_FOUND).json({
@@ -101,6 +103,36 @@ app.get("/api/assets", async (req: express.Request, res: express.Response) => {
 
   return res.json(userAssets);
 });
+
+// GET USER'S PORTFOLIO
+app.get(
+  "/api/portfolios",
+  async (req: express.Request, res: express.Response) => {
+    const hasValidToken = accessTokenVerifificationFromResourceServer(
+      req.headers
+    );
+
+    if (!hasValidToken) {
+      return res.status(ERROR_STATUS.UNAUTHORIZED).json({
+        message: ERROR_CODES.UNAUTHORIZED,
+      });
+    }
+
+    const { userId }: GetPortfolioQueryParams = req.query;
+
+    const { portfolios }: DbData = db.data;
+
+    const userPorfolio: Portfolio | null = portfolios[String(userId)] || null;
+
+    if (!userPorfolio) {
+      return res.status(ERROR_STATUS.NOT_FOUND).json({
+        message: ERROR_CODES.NOT_FOUND,
+      });
+    }
+
+    return res.json(userPorfolio);
+  }
+);
 
 app.listen(API_PORT, () => {
   console.log(`API running on port: ${API_PORT}`);

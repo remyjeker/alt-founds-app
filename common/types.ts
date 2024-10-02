@@ -39,7 +39,7 @@ export type GetAssetsQueryParams = {
 
 export type GetAssetsSuccessResponse = {
   status: Number;
-  data: Assets[];
+  data: Asset[];
 };
 
 export type GetAssetsErrorResponse = {
@@ -61,7 +61,7 @@ export enum AssetTypes {
   "stock",
 }
 
-export type Assets = {
+export type Asset = {
   id: String;
   type: AssetTypes;
   name: String;
@@ -70,6 +70,34 @@ export type Assets = {
 export type DbData = {
   users: UserProfile[];
   assets: {
-    [id: string]: Assets[];
+    [id: string]: Asset[];
   };
+  portfolios: {
+    [id: string]: Portfolio;
+  };
+};
+
+// PORTFOLIO
+
+export type GetPortfolioQueryParams = {
+  userId: String;
+};
+
+export type GetPortfolioSuccessResponse = {
+  status: Number;
+  data: Portfolio;
+};
+
+export type Position = {
+  id: String; // Integer (int64)
+  asset: String;
+  quantity: Number;
+  asOf: Date; // String
+  price: Number;
+};
+
+export type Portfolio = {
+  id: String;
+  asOf: Date; // String
+  positions: Position[];
 };

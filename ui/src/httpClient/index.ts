@@ -1,15 +1,20 @@
+import moment from "moment";
 import axios, { AxiosRequestConfig } from "axios";
 
-import { getCurrentUserAccessToken, getCurrentUserId } from "../services/auth";
 import {
-  Assets,
+  Asset,
   GetAssetsSuccessResponse,
+  GetPortfolioSuccessResponse,
   GlobalErrorResponse,
   LoginParams,
   LoginSuccessResponse,
+  Portfolio,
   UserProfile,
 } from "../../../common/types";
+
 import { ERROR_CODES } from "../../../common/constants";
+
+import { getCurrentUserAccessToken, getCurrentUserId } from "../services/auth";
 
 const axiosClient = axios.create({
   baseURL: "http://localhost:3000/api/",
@@ -62,7 +67,7 @@ export const login = async (
   });
 };
 
-export const getAssets = async (): Promise<Assets[] | String> => {
+export const getAssets = async (): Promise<Asset[] | String> => {
   return new Promise(async (resolve, reject) => {
     const userId = getCurrentUserId();
     const requestConfig = buildRequestConfig({
@@ -72,9 +77,32 @@ export const getAssets = async (): Promise<Assets[] | String> => {
     await axiosClient
       .get("assets", requestConfig)
       .then((response: GetAssetsSuccessResponse) => {
-        const userAssets: Assets[] = response?.data;
+        const userAssets: Asset[] = response?.data;
 
         resolve(userAssets);
+      })
+      .catch((error: GlobalErrorResponse) => {
+        reject(generateErrorMessage(error));
+      });
+  });
+};
+
+export const getPortfolio = async (): Promise<Portfolio | String> => {
+  return new Promise(async (resolve, reject) => {
+    const userId = getCurrentUserId();
+    const todayDate = moment().format("YYYY/MM/DD");
+
+    const requestConfig = buildRequestConfig({
+      userId: userId,
+      asOf: todayDate,
+    });
+
+    await axiosClient
+      .get("portfolios", requestConfig)
+      .then((response: GetPortfolioSuccessResponse) => {
+        const userPortfolio: Portfolio = response?.data;
+
+        resolve(userPortfolio);
       })
       .catch((error: GlobalErrorResponse) => {
         reject(generateErrorMessage(error));
