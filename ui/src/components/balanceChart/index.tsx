@@ -1,7 +1,6 @@
-import { useState, useEffect, useRef, MutableRefObject } from "react";
+import { useState, useEffect, useRef } from "react";
 import { IonContent, IonItem, IonSelect, IonSelectOption } from "@ionic/react";
-
-import Chart, { ChartComponent, ChartItem } from "chart.js/auto";
+import Chart from "chart.js/auto";
 
 import { Asset, Portfolio } from "../../../../common/types";
 import { CURRENT_CURRENCY, TITLES } from "../../../../common/constants";
@@ -33,8 +32,7 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
 
   const [currentBalance, setCurrentBalance] = useState<String>("");
 
-  const [availableAssets, setAvailableAssets] = useState<Asset[]>([]);
-  const [selectedAsset, setSelectedAsset] = useState<String>("");
+  const [selectedAsset, setSelectedAsset] = useState<String | null>(null);
 
   const generateCurrentBalance = (): void => {
     if (!portfolio) {
@@ -82,18 +80,22 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
     let totalPrices: String[] = [];
     let colors: String[] = [];
 
-    positions.forEach((position, index) => {
-      const label = getAssetLabel(position.asset);
-      labels.push(label);
+    positions
+      .filter((position) =>
+        Boolean(!selectedAsset || position.asset === selectedAsset)
+      )
+      .forEach((position, index) => {
+        const label = getAssetLabel(position.asset);
+        labels.push(label);
 
-      const totalPrice = Number(
-        Number(position.price) * Number(position.quantity)
-      );
-      totalPrices.push(totalPrice.toFixed(2));
+        const totalPrice = Number(
+          Number(position.price) * Number(position.quantity)
+        );
+        totalPrices.push(totalPrice.toFixed(2));
 
-      const color = colorsPaletteMapping[index];
-      colors.push(color);
-    });
+        const color = colorsPaletteMapping[index];
+        colors.push(color);
+      });
 
     return {
       labels: [...labels],
@@ -115,27 +117,34 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
     });
   };
 
+  const destroyChart = () => {
+    if (currentChart) {
+      currentChart.destroy();
+
+      return true;
+    }
+  };
+
   useEffect(() => {
     return () => {
-      if (currentChart) {
-        currentChart.destroy();
-      }
+      destroyChart();
     };
   }, []);
 
   useEffect(() => {
-    // console.log("CHART BALANCE - DATA RECEIVED", assets, portfolio);
-
     if (assets && assets?.length && portfolio) {
       generateCurrentBalance();
       generateChart();
     }
   }, [assets, portfolio]);
 
-  const handleSelectedAssetChange = (event: any) => {
-    // console.log("handleSelectedAssetChange", e);
-
+  const handleSelectedAssetChange = (event: CustomEvent) => {
     setSelectedAsset(event?.detail?.value);
+
+    // TODO: Verify update
+    if (destroyChart()) {
+      generateChart();
+    }
   };
 
   return (
@@ -148,23 +157,20 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
         {currentBalance !== "" && (
           <h1 className="ion-text-center">{currentBalance}</h1>
         )}
-
-        {/* {assets && <span>{JSON.stringify(assets)}</span>} */}
-
         <IonItem className="ion-margin-top ion-padding-horizontal">
           <IonSelect
             color={"dark"}
-            aria-label="fruit"
-            placeholder="Select asset..."
+            aria-label="asset"
+            placeholder="Select asset class..."
             onIonChange={handleSelectedAssetChange}
+            value={selectedAsset}
           >
-            {/* ITERATE OVER availableAssets */}
-            <IonSelectOption value="apples">Apples</IonSelectOption>
-            <IonSelectOption value="oranges">Oranges</IonSelectOption>
-            <IonSelectOption value="bananas">Bananas</IonSelectOption>
+            <IonSelectOption value={null}>ALL</IonSelectOption>
+            {assets.map((asset: Asset) => (
+              <IonSelectOption value={asset.id}>{asset.name}</IonSelectOption>
+            ))}
           </IonSelect>
         </IonItem>
-
         <div className="chart-container">
           <canvas ref={canvasRef} />
         </div>
