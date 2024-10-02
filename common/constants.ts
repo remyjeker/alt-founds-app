@@ -6,6 +6,7 @@ export const PATHNAMES = {
 
 export const TITLES = {
   MAIN: "Financial portfolio",
+  CURRENT_BALANCE: "Current Balance",
 };
 
 export const STORAGE_KEYS = {

@@ -14,6 +14,7 @@
     "init": "npm run prepare && npm run start"
   },
   "dependencies": {
+    "chart.js": "^4.4.4",
     "concurrently": "^8.2.2"
   }
 }

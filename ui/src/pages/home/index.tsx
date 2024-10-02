@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Redirect, Route } from "react-router";
+import { Route } from "react-router";
 import { useQuery } from "@tanstack/react-query";
 import { IonReactRouter } from "@ionic/react-router";
 import { analytics, pieChart, barChart } from "ionicons/icons";
@@ -16,6 +16,7 @@ import {
 } from "@ionic/react";
 
 import Header from "../../components/header";
+import BalanceChart from "../../components/balanceChart";
 
 import { getAssets } from "../../httpClient";
 import { TITLES } from "../../../../common/constants";
@@ -30,8 +31,8 @@ const Home: React.FC = () => {
 
   const {
     data: allAssets,
-    isLoading: isAssetsLoading,
     isError: isAssetsError,
+    isLoading: isAssetsLoading,
     failureReason: errorMessage,
   } = useQuery({
     queryKey: ["getAssets"],
@@ -39,15 +40,14 @@ const Home: React.FC = () => {
     retry: 1,
   });
 
-  // useEffect(() => {
-  //   console.log(
-  //     "--- CHANGES ---",
-  //     "allAssets: " + allAssets,
-  //     "isAssetsLoading: " + isAssetsLoading,
-  //     "isAssetsError: " + isAssetsError,
-  //     "errorMessage: " + errorMessage
-  //   );
-  // }, [allAssets, isAssetsLoading, isAssetsError, errorMessage]);
+  const handleTabChange = (e: any) => {
+    // console.log("TAB CHANGED", e);
+    // trigger chart generation
+  };
+
+  useEffect(() => {
+    console.log("--- HOME MOUNTED ---");
+  }, []);
 
   useEffect(() => {
     setShowLoading(isAssetsLoading);
@@ -64,18 +64,11 @@ const Home: React.FC = () => {
       <Header title={pageTitle} />
       <IonContent>
         <IonReactRouter>
-          <IonTabs>
+          <IonTabs onIonTabsDidChange={handleTabChange}>
             <IonRouterOutlet>
-              <Redirect exact path="/" to="/home" />
               <Route
                 path="/home"
-                render={() => (
-                  <div className="ion-padding">
-                    <h1>Home</h1>
-                    {allAssets && <span>{JSON.stringify(allAssets)}</span>}
-                    {showError && <span>{String(errorMessage)}</span>}
-                  </div>
-                )}
+                render={() => <BalanceChart assets={allAssets} />}
                 exact={true}
               />
               <Route path="/table" render={() => <h1>Table</h1>} exact={true} />
@@ -89,7 +82,7 @@ const Home: React.FC = () => {
             <IonTabBar slot="bottom">
               <IonTabButton tab="home" href="/home">
                 <IonIcon icon={pieChart} />
-                <IonLabel>Portfolio</IonLabel>
+                <IonLabel>Balance</IonLabel>
               </IonTabButton>
               <IonTabButton tab="table" href="/table">
                 <IonIcon icon={barChart} />
@@ -102,6 +95,10 @@ const Home: React.FC = () => {
             </IonTabBar>
           </IonTabs>
         </IonReactRouter>
+
+        {/* TODO HERE */}
+        {showError && <span>{String(errorMessage)}</span>}
+
         <IonLoading
           isOpen={showLoading}
           spinner="circles"
