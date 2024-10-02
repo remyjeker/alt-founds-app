@@ -1,72 +1,81 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, MutableRefObject } from "react";
 import { IonContent, IonItem, IonSelect, IonSelectOption } from "@ionic/react";
 
-import Chart, { ChartComponent } from "chart.js/auto";
+import Chart, { ChartComponent, ChartItem } from "chart.js/auto";
 
 import { Asset, Portfolio } from "../../../../common/types";
-import { TITLES } from "../../../../common/constants";
+import { CURRENT_CURRENCY, TITLES } from "../../../../common/constants";
 
 import "./styles.css";
 
-const colorsMapping = [
+const colorsPaletteMapping = [
   "rgb(255, 99, 132)",
   "rgb(54, 162, 235)",
   "rgb(255, 205, 86)",
   "rgb(160, 255, 12)",
-  "rgb(2, 100, 234)",
+  "rgb(136, 255, 255)",
+  "rgb(136, 255, 255)",
+  "rgb(172, 115, 255)",
 ];
 
 interface IBalanceChartProps {
-  // TODO: CHECK TYPE
-  assets: String | Asset[] | undefined;
-  portfolio: String | Portfolio | undefined;
+  assets: Asset[] | undefined;
+  portfolio: Portfolio | undefined;
 }
 
 const BalanceChart: React.FC<IBalanceChartProps> = ({
   assets = [],
   portfolio = null,
 }) => {
-  const canvasRef = useRef<any>(null);
+  let currentChart: Chart<any> | null = null;
 
-  const [balanceChart, setBalanceChart] = useState<ChartComponent | null>(null);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  const [currentBalance, setCurrentBalance] = useState<String>("");
 
   const [availableAssets, setAvailableAssets] = useState<Asset[]>([]);
   const [selectedAsset, setSelectedAsset] = useState<String>("");
 
-  // const data = {
-  //   labels: ["Red", "Blue", "Yellow"],
-  //   datasets: [
-  //     {
-  //       label: "Current balance",
-  //       data: [300, 50, 100],
-  //       backgroundColor: [
-  //         "rgb(255, 99, 132)",
-  //         "rgb(54, 162, 235)",
-  //         "rgb(255, 205, 86)",
-  //       ],
-  //       hoverOffset: 4,
-  //     },
-  //   ],
-  // };
+  const generateCurrentBalance = (): void => {
+    if (!portfolio) {
+      return;
+    }
 
-  // TODO: TO FIX
+    let sum: number = 0;
+
+    const { positions } = portfolio as Portfolio;
+
+    positions.forEach((position) => {
+      const positionAmount = Number(
+        Number(position.price) * Number(position.quantity)
+      );
+
+      sum += positionAmount;
+    });
+
+    const formatedCurrentBalance = new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: CURRENT_CURRENCY,
+    }).format(sum);
+
+    setCurrentBalance(formatedCurrentBalance);
+  };
+
   const getAssetLabel = (assetId: String): String => {
-    const test = assets.findIndex((x: Asset) => x.id === assetId);
+    const index: number = [...assets].findIndex(
+      (asset: Asset) => asset.id === assetId
+    );
 
-    if (test >= 0) {
-      const { name, type }: Asset = assets[test];
+    if (index >= 0) {
+      const { name, type }: Asset = assets[index];
 
-      return String(name).concat(" (", String(type), ")");
+      return String(name).concat(" (", String(type).toUpperCase(), ")");
     }
 
     return assetId;
   };
 
-  const generateChartData = () => {
-    // if (!portfolio || !assets) {
-    //   return {};
-    // }
-
+  const generateChartDataSet = () => {
     const { positions } = portfolio as Portfolio;
 
     let labels: String[] = [];
@@ -74,94 +83,75 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
     let colors: String[] = [];
 
     positions.forEach((position, index) => {
-      // 1
-      const assetLabel = getAssetLabel(position.asset);
-      labels.push(assetLabel);
+      const label = getAssetLabel(position.asset);
+      labels.push(label);
 
-      // 2
       const totalPrice = Number(
         Number(position.price) * Number(position.quantity)
       );
-      // .toFixed(2);
-      totalPrices.push(String(totalPrice));
+      totalPrices.push(totalPrice.toFixed(2));
 
-      // 3
-      const color = colorsMapping[index];
+      const color = colorsPaletteMapping[index];
       colors.push(color);
     });
 
-    // console.log(labels, totalPrices, colors);
-
     return {
-      labels: labels,
+      labels: [...labels],
       datasets: [
         {
-          label: "Total amount (USD)",
-          data: totalPrices,
-          backgroundColor: colors,
-          hoverOffset: 4,
+          label: `Total amount (${CURRENT_CURRENCY})`,
+          data: [...totalPrices],
+          backgroundColor: [...colors],
+          hoverOffset: 16,
         },
       ],
     };
   };
 
   const generateChart = () => {
-    console.log("generateChart", balanceChart, canvasRef);
-
-    const { current: canvasRefCurrentElement } = canvasRef;
-
-    if (canvasRefCurrentElement) {
-      setBalanceChart(
-        new Chart(canvasRefCurrentElement, {
-          type: "doughnut",
-          // data: data,
-          data: generateChartData(),
-        })
-      );
-    }
-  };
-
-  const unmountChart = () => {
-    console.log("unmountChart");
-
-    canvasRef.current = null;
-
-    setBalanceChart(null);
+    currentChart = new Chart(canvasRef?.current, {
+      type: "doughnut",
+      data: generateChartDataSet(),
+    });
   };
 
   useEffect(() => {
-    console.log("--- CHART MOUNTED ---");
-
     return () => {
-      console.log("--- CHART UNMOUNTED ---");
-      unmountChart();
+      if (currentChart) {
+        currentChart.destroy();
+      }
     };
   }, []);
 
   useEffect(() => {
     // console.log("CHART BALANCE - DATA RECEIVED", assets, portfolio);
-    console.log("TEST", assets, Object.keys(assets), Object.values(assets));
 
     if (assets && assets?.length && portfolio) {
+      generateCurrentBalance();
       generateChart();
     }
   }, [assets, portfolio]);
 
-  const handleSelectedAssetChange = (e: any) => {
+  const handleSelectedAssetChange = (event: any) => {
     // console.log("handleSelectedAssetChange", e);
 
-    setSelectedAsset(e?.detail?.value);
+    setSelectedAsset(event?.detail?.value);
   };
 
   return (
     <IonContent>
       <div className="ion-padding">
-        <span>{"My account > Balance"}</span>
-        <h3 className="ion-text-center">{TITLES.CURRENT_BALANCE}</h3>
+        <span className="breadcrumbs">
+          {TITLES.ACCOUNT + " > " + TITLES.CURRENT_BALANCE}
+        </span>
+        <h3 className="ion-text-center">{TITLES.CURRENT_BALANCE} :</h3>
+        {currentBalance !== "" && (
+          <h1 className="ion-text-center">{currentBalance}</h1>
+        )}
 
         {/* {assets && <span>{JSON.stringify(assets)}</span>} */}
 
-        <IonItem>
+        <IonItem className="ion-margin-top ion-padding-horizontal">
           <IonSelect
             color={"dark"}
             aria-label="fruit"

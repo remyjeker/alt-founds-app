@@ -22,6 +22,7 @@ import { getAssets, getPortfolio } from "../../httpClient";
 import { TITLES } from "../../../../common/constants";
 
 import "./styles.css";
+import { Asset, Portfolio } from "../../../../common/types";
 
 const pageTitle = TITLES.MAIN;
 
@@ -83,7 +84,10 @@ const Home: React.FC = () => {
               <Route
                 path="/home"
                 render={() => (
-                  <BalanceChart assets={userAssets} portfolio={userPortfolio} />
+                  <BalanceChart
+                    assets={userAssets as Asset[]}
+                    portfolio={userPortfolio as Portfolio}
+                  />
                 )}
                 exact={true}
               />

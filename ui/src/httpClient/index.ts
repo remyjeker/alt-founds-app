@@ -9,6 +9,7 @@ import {
   LoginParams,
   LoginSuccessResponse,
   Portfolio,
+  AuthRequestQueryParams,
   UserProfile,
 } from "../../../common/types";
 
@@ -26,7 +27,9 @@ const axiosClient = axios.create({
   },
 });
 
-const buildRequestConfig = (requestParams: any): AxiosRequestConfig<any> => {
+const buildRequestConfig = (
+  requestParams: AuthRequestQueryParams = {}
+): AxiosRequestConfig<AuthRequestQueryParams> => {
   const accessToken = getCurrentUserAccessToken() || "";
 
   return {
@@ -69,17 +72,14 @@ export const login = async (
 
 export const getAssets = async (): Promise<Asset[] | String> => {
   return new Promise(async (resolve, reject) => {
-    const userId = getCurrentUserId();
-    const requestConfig = buildRequestConfig({
-      userId: userId,
-    });
+    const requestConfig = buildRequestConfig();
 
     await axiosClient
       .get("assets", requestConfig)
       .then((response: GetAssetsSuccessResponse) => {
-        const userAssets: Asset[] = response?.data;
+        const allAssets: Asset[] = response?.data;
 
-        resolve(userAssets);
+        resolve(allAssets);
       })
       .catch((error: GlobalErrorResponse) => {
         reject(generateErrorMessage(error));
@@ -89,8 +89,9 @@ export const getAssets = async (): Promise<Asset[] | String> => {
 
 export const getPortfolio = async (): Promise<Portfolio | String> => {
   return new Promise(async (resolve, reject) => {
-    const userId = getCurrentUserId();
-    const todayDate = moment().format("YYYY/MM/DD");
+    const userId = getCurrentUserId() || "";
+    // TODO: Params Or Today
+    const todayDate = moment().format("YYYY/MM/DD") || "";
 
     const requestConfig = buildRequestConfig({
       userId: userId,

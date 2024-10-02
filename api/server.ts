@@ -1,11 +1,9 @@
-import express from "express";
 import cors from "cors";
+import express from "express";
 import { JSONFilePreset } from "lowdb/node";
 
 import {
-  Asset,
   DbData,
-  GetAssetsQueryParams,
   GetPortfolioQueryParams,
   LoginRequest,
   Portfolio,
@@ -26,7 +24,11 @@ app.use(
   })
 );
 
-const defaultData: DbData = { users: [], assets: {}, portfolios: {} };
+const defaultData: DbData = {
+  users: [],
+  assets: [],
+  portfolios: {},
+};
 
 const db = await JSONFilePreset<DbData>("db.json", defaultData);
 
@@ -41,7 +43,7 @@ const isPasswordMatching = (user: UserProfile, password: String): Boolean => {
   return Boolean(user.password === password);
 };
 
-// WARNING : DUMMY TOKEN VERIFICATION
+// [WARNING] DUMMY TOKEN VERIFICATION
 const accessTokenVerifificationFromResourceServer = (
   requestHeader: express.Request.headers
 ) => {
@@ -52,7 +54,7 @@ const accessTokenVerifificationFromResourceServer = (
   );
 };
 
-// WARNING : DUMMY LOGIN FEATURE
+// [WARNING] DUMMY LOGIN FEATURE
 app.post("/api/login", async (req: express.Request, res: express.Response) => {
   const { body: userCredentials }: LoginRequest = req;
 
@@ -77,7 +79,7 @@ app.post("/api/login", async (req: express.Request, res: express.Response) => {
   });
 });
 
-// GET USER'S ASSETS
+// GET ALL FINANCIAL ASSETS
 app.get("/api/assets", async (req: express.Request, res: express.Response) => {
   const hasValidToken = accessTokenVerifificationFromResourceServer(
     req.headers
@@ -89,19 +91,15 @@ app.get("/api/assets", async (req: express.Request, res: express.Response) => {
     });
   }
 
-  const { userId }: GetAssetsQueryParams = req.query;
-
   const { assets }: DbData = db.data;
 
-  const userAssets: Asset[] | null = assets[String(userId)] || null;
-
-  if (!userAssets) {
+  if (!assets || !assets.length) {
     return res.status(ERROR_STATUS.NOT_FOUND).json({
       message: ERROR_CODES.NOT_FOUND,
     });
   }
 
-  return res.json(userAssets);
+  return res.json(assets);
 });
 
 // GET USER'S PORTFOLIO

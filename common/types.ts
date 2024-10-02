@@ -33,8 +33,9 @@ export type UserProfile = {
   username: String;
 };
 
-export type GetAssetsQueryParams = {
-  userId: String;
+export type AuthRequestQueryParams = {
+  userId?: String;
+  asOf?: String;
 };
 
 export type GetAssetsSuccessResponse = {
@@ -69,15 +70,11 @@ export type Asset = {
 
 export type DbData = {
   users: UserProfile[];
-  assets: {
-    [id: string]: Asset[];
-  };
+  assets: Asset[];
   portfolios: {
     [id: string]: Portfolio;
   };
 };
-
-// PORTFOLIO
 
 export type GetPortfolioQueryParams = {
   userId: String;
@@ -89,15 +86,15 @@ export type GetPortfolioSuccessResponse = {
 };
 
 export type Position = {
-  id: String; // Integer (int64)
+  id: String;
   asset: String;
   quantity: Number;
-  asOf: Date; // String
+  asOf: String;
   price: Number;
 };
 
 export type Portfolio = {
   id: String;
-  asOf: Date; // String
+  asOf: String;
   positions: Position[];
 };
