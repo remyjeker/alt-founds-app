@@ -19,10 +19,10 @@ import Header from "../../components/header";
 import BalanceChart from "../../components/balanceChart";
 
 import { getAssets, getPortfolio } from "../../httpClient";
-import { TITLES } from "../../../../common/constants";
+import { Asset, Portfolio } from "../../../../common/types";
+import { TITLES, CHART_TYPES, PATHNAMES } from "../../../../common/constants";
 
 import "./styles.css";
-import { Asset, Portfolio } from "../../../../common/types";
 
 const pageTitle = TITLES.MAIN;
 
@@ -82,33 +82,43 @@ const Home: React.FC = () => {
           <IonTabs onIonTabsDidChange={handleTabChange}>
             <IonRouterOutlet>
               <Route
-                path="/home"
+                path={PATHNAMES.HOME}
+                exact={true}
                 render={() => (
                   <BalanceChart
+                    charType={CHART_TYPES.DOUGHNUT}
                     assets={userAssets as Asset[]}
                     portfolio={userPortfolio as Portfolio}
                   />
                 )}
-                exact={true}
               />
-              <Route path="/table" render={() => <h1>Table</h1>} exact={true} />
               <Route
-                path="/history"
-                render={() => <h1>History</h1>}
+                path={PATHNAMES.TABLE}
                 exact={true}
+                render={() => (
+                  <BalanceChart
+                    charType={CHART_TYPES.BAR}
+                    assets={userAssets as Asset[]}
+                    portfolio={userPortfolio as Portfolio}
+                  />
+                )}
+              />
+              <Route
+                path={PATHNAMES.HISTORY}
+                exact={true}
+                render={() => <h1>History</h1>}
               />
             </IonRouterOutlet>
-
             <IonTabBar slot="bottom">
-              <IonTabButton tab="home" href="/home">
+              <IonTabButton tab="home" href={PATHNAMES.HOME}>
                 <IonIcon icon={pieChart} />
                 <IonLabel>Balance</IonLabel>
               </IonTabButton>
-              <IonTabButton tab="table" href="/table">
+              <IonTabButton tab="table" href={PATHNAMES.TABLE}>
                 <IonIcon icon={barChart} />
                 <IonLabel>Table</IonLabel>
               </IonTabButton>
-              <IonTabButton tab="history" href="/history">
+              <IonTabButton tab="history" href={PATHNAMES.HISTORY}>
                 <IonIcon icon={analytics} />
                 <IonLabel>History</IonLabel>
               </IonTabButton>
@@ -117,6 +127,7 @@ const Home: React.FC = () => {
         </IonReactRouter>
 
         {/* TODO HERE */}
+        {/* portfolioErrorMessage */}
         {showError && <span>{String(assetsErrorMessage)}</span>}
 
         <IonLoading

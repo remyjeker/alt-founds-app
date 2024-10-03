@@ -1,6 +1,6 @@
 .asset-class-filter-container {
   width: 50%;
-  margin: 0 auto;
+  margin: 20px auto;
 }
 
 .chart-container {
@@ -8,6 +8,11 @@
   min-width: 300px;
   max-width: 600px;
   margin: 20px auto;
+}
+
+.chart-container.bar {
+  width: 100%;
+  max-width: 800px;
 }
 
 @media only screen and (max-width: 600px) {

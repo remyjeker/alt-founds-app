@@ -4,7 +4,11 @@ import { IonContent, IonItem, IonSelect, IonSelectOption } from "@ionic/react";
 import Chart from "chart.js/auto";
 
 import { Asset, Portfolio, Position } from "../../../../common/types";
-import { CURRENT_CURRENCY, TITLES } from "../../../../common/constants";
+import {
+  CURRENT_CURRENCY,
+  TITLES,
+  CHART_TYPES,
+} from "../../../../common/constants";
 
 import "./styles.css";
 
@@ -12,18 +16,20 @@ const colorsPaletteMapping = [
   "rgb(255, 99, 132)",
   "rgb(54, 162, 235)",
   "rgb(255, 205, 86)",
-  "rgb(160, 255, 12)",
-  "rgb(136, 255, 255)",
-  "rgb(136, 255, 255)",
   "rgb(172, 115, 255)",
+  "rgb(185, 255, 79)",
+  "rgb(136, 255, 255)",
+  "rgb(136, 255, 255)",
 ];
 
 interface IBalanceChartProps {
+  charType: String;
   assets: Asset[] | undefined;
   portfolio: Portfolio | undefined;
 }
 
 const BalanceChart: React.FC<IBalanceChartProps> = ({
+  charType = CHART_TYPES.DOUGHNUT,
   assets = [],
   portfolio = null,
 }) => {
@@ -142,9 +148,15 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
     }
 
     setChart(
+      // @ts-ignore
       new Chart(canvasRef?.current, {
-        type: "doughnut",
+        type: charType,
         data: generateChartDataSet(),
+        options: {
+          layout: {
+            padding: 16,
+          },
+        },
       })
     );
   };
@@ -171,9 +183,9 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
         <span className="breadcrumbs">
           {TITLES.ACCOUNT + " > " + TITLES.CURRENT_BALANCE}
         </span>
-        <h3 className="ion-text-center">{TITLES.CURRENT_BALANCE} :</h3>
+        <h3 className="ion-text-center">{TITLES.CURRENT_BALANCE}</h3>
         {currentBalance !== "" && (
-          <h1 className="ion-text-center">{currentBalance}</h1>
+          <h1 className="ion-text-center">Total : {currentBalance}</h1>
         )}
         <div className="asset-class-filter-container">
           <IonItem className="ion-margin-top ion-padding-horizontal">
@@ -195,7 +207,7 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
             </IonSelect>
           </IonItem>
         </div>
-        <div className="chart-container">
+        <div className={`chart-container ${charType}`}>
           <canvas ref={canvasRef} />
         </div>
       </div>

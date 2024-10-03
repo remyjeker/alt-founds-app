@@ -2,6 +2,13 @@ export const PATHNAMES = {
   ROOT: "/",
   LOGIN: "/login",
   HOME: "/home",
+  TABLE: "/table",
+  HISTORY: "/history",
+};
+
+export const CHART_TYPES = {
+  DOUGHNUT: "doughnut",
+  BAR: "bar",
 };
 
 export const TITLES = {
