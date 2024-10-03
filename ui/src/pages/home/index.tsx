@@ -21,7 +21,6 @@ import BalanceChart from "../../components/balanceChart";
 import HistoryChart from "../../components/historyChart";
 
 import { getAssets, getPortfolio } from "../../httpClient";
-import { Asset, Portfolio } from "../../../../common/types";
 import { TITLES, CHART_TYPES, PATHNAMES } from "../../../../common/constants";
 
 import "./styles.css";
@@ -96,8 +95,8 @@ const Home: React.FC = () => {
                 render={() => (
                   <BalanceChart
                     charType={CHART_TYPES.DOUGHNUT}
-                    assets={userAssets as Asset[]}
-                    portfolio={userPortfolio as Portfolio}
+                    assets={userAssets}
+                    portfolio={userPortfolio}
                   />
                 )}
               />
@@ -107,8 +106,8 @@ const Home: React.FC = () => {
                 render={() => (
                   <BalanceChart
                     charType={CHART_TYPES.BAR}
-                    assets={userAssets as Asset[]}
-                    portfolio={userPortfolio as Portfolio}
+                    assets={userAssets}
+                    portfolio={userPortfolio}
                   />
                 )}
               />
@@ -116,10 +115,7 @@ const Home: React.FC = () => {
                 path={PATHNAMES.HISTORY}
                 exact={true}
                 render={() => (
-                  <HistoryChart
-                    assets={userAssets as Asset[]}
-                    portfolio={userPortfolio as Portfolio}
-                  />
+                  <HistoryChart assets={userAssets} portfolio={userPortfolio} />
                 )}
               />
             </IonRouterOutlet>

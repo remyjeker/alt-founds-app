@@ -14,7 +14,7 @@ import {
 import "./styles.css";
 
 interface IBalanceChartProps {
-  charType: String;
+  charType: string;
   assets: Asset[] | undefined;
   portfolio: Portfolio | undefined;
 }
@@ -27,11 +27,11 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   const [chart, setChart] = useState<any>(null);
-  const [selectedAsset, setSelectedAsset] = useState<String | null>(null);
-  const [currentBalance, setCurrentBalance] = useState<String>("");
-  const [userAssetClasses, setUserAssetClasses] = useState<String[]>([]);
+  const [selectedAsset, setSelectedAsset] = useState<string | null>(null);
+  const [currentBalance, setCurrentBalance] = useState<string>("");
+  const [userAssetClasses, setUserAssetClasses] = useState<string[]>([]);
 
-  const getFormatedCurrencyPrice = (value: number): String => {
+  const getFormatedCurrencyPrice = (value: number): string => {
     return new Intl.NumberFormat("en-US", {
       style: "currency",
       currency: CURRENT_CURRENCY,
@@ -55,7 +55,7 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
   };
 
   const handleSelectedAssetChange = (event: CustomEvent) => {
-    const selectedAssetId: String = event?.detail?.value;
+    const selectedAssetId: string = event?.detail?.value;
 
     setSelectedAsset(selectedAssetId);
 
@@ -65,7 +65,7 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
   const defineUniqueAssetClasses = () => {
     const { positions } = portfolio as Portfolio;
 
-    let userAssetIds: String[] = [];
+    let userAssetIds: string[] = [];
 
     positions.forEach((position: Position) => {
       if (!userAssetIds.includes(position.asset)) {
@@ -76,7 +76,7 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
     setUserAssetClasses(userAssetIds);
   };
 
-  const getAssetLabel = (assetId: String): String => {
+  const getAssetLabel = (assetId: string): string => {
     const index: number = [...assets].findIndex(
       (asset: Asset) => asset.id === assetId
     );
@@ -90,12 +90,12 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
     return assetId;
   };
 
-  const generateChartDataSet = (assetId: String | null = null) => {
+  const generateChartDataSet = (assetId: string | null = null) => {
     const { positions } = portfolio as Portfolio;
 
-    let labels: String[] = [];
-    let totalPrices: String[] = [];
-    let colors: String[] = [];
+    let labels: string[] = [];
+    let totalPrices: string[] = [];
+    let colors: string[] = [];
 
     positions
       .filter((position: Position) =>
@@ -126,7 +126,7 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
     };
   };
 
-  const generateChart = (assetId: String | null = null) => {
+  const generateChart = (assetId: string | null = null) => {
     if (chart) {
       chart.data = generateChartDataSet(assetId);
       chart.update();

@@ -8,15 +8,15 @@ export type LoginRequest = {
 };
 
 export type LoginSuccessResponse = {
-  status: Number;
+  status: number;
   data: UserProfile;
 };
 
 export type GlobalErrorResponse = {
-  status: Number;
+  status: number;
   response: {
     data: {
-      message: String;
+      message: string;
     };
   };
 };
@@ -24,30 +24,30 @@ export type GlobalErrorResponse = {
 export type LoginResponse = LoginSuccessResponse | GlobalErrorResponse;
 
 export type UserProfile = {
-  accessToken: String;
-  email: String;
-  id: Number;
-  image: String;
-  password?: String;
-  refreshToken: String;
-  username: String;
+  accessToken: string;
+  email: string;
+  id: number;
+  image: string;
+  password?: string;
+  refreshToken: string;
+  username: string;
 };
 
 export type AuthRequestQueryParams = {
-  userId?: String;
-  asOf?: String;
+  userId?: string;
+  asOf?: string;
 };
 
 export type GetAssetsSuccessResponse = {
-  status: Number;
+  status: number;
   data: Asset[];
 };
 
 export type GetAssetsErrorResponse = {
-  status: Number;
+  status: number;
   response: {
     data: {
-      message: String;
+      message: string;
     };
   };
 };
@@ -63,9 +63,9 @@ export enum AssetTypes {
 }
 
 export type Asset = {
-  id: String;
+  id: string;
   type: AssetTypes;
-  name: String;
+  name: string;
 };
 
 export type DbData = {
@@ -77,24 +77,24 @@ export type DbData = {
 };
 
 export type GetPortfolioQueryParams = {
-  userId: String;
+  userId: string;
 };
 
 export type GetPortfolioSuccessResponse = {
-  status: Number;
+  status: number;
   data: Portfolio;
 };
 
 export type Position = {
-  id: String;
-  asset: String;
-  quantity: Number;
-  asOf: Number;
-  price: Number;
+  id: string;
+  asset: string;
+  quantity: number;
+  asOf: number;
+  price: number;
 };
 
 export type Portfolio = {
-  id: String;
-  asOf: Number;
+  id: string;
+  asOf: number;
   positions: Position[];
 };

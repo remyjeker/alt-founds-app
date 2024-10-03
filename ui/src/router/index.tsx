@@ -1,4 +1,5 @@
-import { IonRouterOutlet, ReactComponentOrElement } from "@ionic/react";
+import { ReactElement } from "react";
+import { IonRouterOutlet } from "@ionic/react";
 import { Redirect, Route } from "react-router-dom";
 
 import Login from "./../pages/login";
@@ -10,17 +11,17 @@ import { PATHNAMES, AUTH_STATUS } from "../../../common/constants";
 const authStatus: string | null = getAuthStatus();
 const userAccesToken: string | null = getCurrentUserAccessToken();
 
-const isConnected: Boolean = Boolean(
+const isConnected: boolean = Boolean(
   authStatus && authStatus === AUTH_STATUS.CONNECTED && userAccesToken
 );
 
 const DEFAULT_PAGE: string = PATHNAMES.LOGIN;
 
 interface ProtectedRouteProps {
-  children: ReactComponentOrElement;
+  children: ReactElement;
 }
 
-const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }: any) => {
+const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
   if (!isConnected) {
     return <Redirect to={DEFAULT_PAGE} />;
   }
@@ -28,9 +29,7 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ children }: any) => {
   return children;
 };
 
-interface AppRouterProps {}
-
-const AppRouter: React.FC<AppRouterProps> = () => (
+const AppRouter: React.FC<{}> = () => (
   <IonRouterOutlet>
     <Route exact path={PATHNAMES.HOME}>
       <ProtectedRoute>
