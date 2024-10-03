@@ -29,7 +29,7 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const [myChart, setMyChart] = useState<any>(null);
+  const [chart, setChart] = useState<any>(null);
   const [selectedAsset, setSelectedAsset] = useState<String | null>(null);
   const [currentBalance, setCurrentBalance] = useState<String>("");
   const [userAssetClasses, setUserAssetClasses] = useState<String[]>([]);
@@ -55,6 +55,14 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
     });
 
     setCurrentBalance(getFormatedCurrencyPrice(amount));
+  };
+
+  const handleSelectedAssetChange = (event: CustomEvent) => {
+    const selectedAssetId: String = event?.detail?.value;
+
+    setSelectedAsset(selectedAssetId);
+
+    generateChart(selectedAssetId);
   };
 
   const defineUniqueAssetClasses = () => {
@@ -122,9 +130,9 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
   };
 
   const generateChart = (assetId: String | null = null) => {
-    if (myChart) {
-      myChart.data = generateChartDataSet(assetId);
-      myChart.update();
+    if (chart) {
+      chart.data = generateChartDataSet(assetId);
+      chart.update();
 
       return;
     }
@@ -133,18 +141,18 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
       return;
     }
 
-    let newChart = new Chart(canvasRef?.current, {
-      type: "doughnut",
-      data: generateChartDataSet(),
-    });
-
-    setMyChart(newChart);
+    setChart(
+      new Chart(canvasRef?.current, {
+        type: "doughnut",
+        data: generateChartDataSet(),
+      })
+    );
   };
 
   useEffect(() => {
     return () => {
-      if (myChart) {
-        myChart.destroy();
+      if (chart) {
+        chart.destroy();
       }
     };
   }, []);
@@ -156,14 +164,6 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
       generateChart();
     }
   }, [assets, portfolio]);
-
-  const handleSelectedAssetChange = (event: CustomEvent) => {
-    const selectedAssetId: String = event?.detail?.value;
-
-    setSelectedAsset(selectedAssetId);
-
-    generateChart(selectedAssetId);
-  };
 
   return (
     <IonContent>
