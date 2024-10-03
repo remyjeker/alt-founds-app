@@ -15,6 +15,8 @@ export const TITLES = {
   MAIN: "Financial portfolio",
   ACCOUNT: "Account",
   CURRENT_BALANCE: "Current Balance",
+  HISTORY: "History",
+  EVOLUTION: "Porfolio Evolution",
 };
 
 export const STORAGE_KEYS = {
@@ -44,3 +46,13 @@ export const ERROR_CODES = {
   UNAUTHORIZED: "UNAUTHORIZED",
   NOT_FOUND: "NOT_FOUND",
 };
+
+export const COLORS_PALETTE = [
+  "rgb(255, 99, 132)",
+  "rgb(54, 162, 235)",
+  "rgb(255, 205, 86)",
+  "rgb(172, 115, 255)",
+  "rgb(185, 255, 79)",
+  "rgb(136, 255, 255)",
+  "rgb(136, 255, 255)",
+];

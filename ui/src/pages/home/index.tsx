@@ -4,6 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { IonReactRouter } from "@ionic/react-router";
 import { analytics, pieChart, barChart } from "ionicons/icons";
 import {
+  IonAlert,
   IonContent,
   IonIcon,
   IonLabel,
@@ -17,6 +18,7 @@ import {
 
 import Header from "../../components/header";
 import BalanceChart from "../../components/balanceChart";
+import HistoryChart from "../../components/historyChart";
 
 import { getAssets, getPortfolio } from "../../httpClient";
 import { Asset, Portfolio } from "../../../../common/types";
@@ -28,13 +30,16 @@ const pageTitle = TITLES.MAIN;
 
 const Home: React.FC = () => {
   const [showLoading, setShowLoading] = useState<boolean>(false);
-  const [showError, setShowError] = useState<boolean>(false);
+
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [showErrorMessage, setShowErrorMessage] = useState<boolean>(false);
 
   const {
     data: userAssets,
     isError: isAssetsError,
     isLoading: isAssetsLoading,
     failureReason: assetsErrorMessage,
+    refetch: refetchAssests,
   } = useQuery({
     queryKey: ["getAssets"],
     queryFn: getAssets,
@@ -46,15 +51,18 @@ const Home: React.FC = () => {
     isError: isPortfolioError,
     isLoading: isPortfolioLoading,
     failureReason: portfolioErrorMessage,
+    refetch: refetchPortfolio,
   } = useQuery({
     queryKey: ["getPortfolio"],
     queryFn: getPortfolio,
     retry: 1,
   });
 
-  const handleTabChange = (e: any) => {
-    // console.log("TAB CHANGED", e);
-    // trigger chart generation
+  const handleTabChange = () => {
+    if (isAssetsError || isPortfolioError) {
+      refetchAssests();
+      refetchPortfolio();
+    }
   };
 
   useEffect(() => {
@@ -62,17 +70,22 @@ const Home: React.FC = () => {
   }, []);
 
   useEffect(() => {
-    // setShowLoading(isAssetsLoading);
     setShowLoading(isAssetsLoading || isPortfolioLoading);
   }, [isAssetsLoading, isPortfolioLoading]);
 
   useEffect(() => {
     if (isAssetsError && assetsErrorMessage) {
-      // setErrorMessage(assetsErrorMessage)
-      // setErrorMessage(portfolioErrorMessage)
-      setShowError(true);
+      setErrorMessage(String(assetsErrorMessage));
+      setShowErrorMessage(true);
     }
   }, [isAssetsError]);
+
+  useEffect(() => {
+    if (isPortfolioError && portfolioErrorMessage) {
+      setErrorMessage(String(portfolioErrorMessage));
+      setShowErrorMessage(true);
+    }
+  }, [isPortfolioError]);
 
   return (
     <IonPage>
@@ -106,7 +119,12 @@ const Home: React.FC = () => {
               <Route
                 path={PATHNAMES.HISTORY}
                 exact={true}
-                render={() => <h1>History</h1>}
+                render={() => (
+                  <HistoryChart
+                    assets={userAssets as Asset[]}
+                    portfolio={userPortfolio as Portfolio}
+                  />
+                )}
               />
             </IonRouterOutlet>
             <IonTabBar slot="bottom">
@@ -125,11 +143,13 @@ const Home: React.FC = () => {
             </IonTabBar>
           </IonTabs>
         </IonReactRouter>
-
-        {/* TODO HERE */}
-        {/* portfolioErrorMessage */}
-        {showError && <span>{String(assetsErrorMessage)}</span>}
-
+        <IonAlert
+          isOpen={showErrorMessage}
+          header="Fetching data error"
+          message={errorMessage}
+          buttons={["Dismiss"]}
+          onDidDismiss={() => setShowErrorMessage(false)}
+        />
         <IonLoading
           isOpen={showLoading}
           spinner="circles"

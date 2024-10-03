@@ -4,10 +4,13 @@
 }
 
 .chart-container {
-  width: 50%;
   min-width: 300px;
-  max-width: 600px;
   margin: 20px auto;
+}
+
+.chart-container.doughnut {
+  width: 50%;
+  max-width: 600px;
 }
 
 .chart-container.bar {

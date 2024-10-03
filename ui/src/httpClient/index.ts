@@ -90,7 +90,6 @@ export const getAssets = async (): Promise<Asset[] | String> => {
 export const getPortfolio = async (): Promise<Portfolio | String> => {
   return new Promise(async (resolve, reject) => {
     const userId = getCurrentUserId() || "";
-    // TODO: Params Or Today
     const todayDate = moment().format("YYYY/MM/DD") || "";
 
     const requestConfig = buildRequestConfig({

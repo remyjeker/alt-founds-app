@@ -8,19 +8,10 @@ import {
   CURRENT_CURRENCY,
   TITLES,
   CHART_TYPES,
+  COLORS_PALETTE,
 } from "../../../../common/constants";
 
 import "./styles.css";
-
-const colorsPaletteMapping = [
-  "rgb(255, 99, 132)",
-  "rgb(54, 162, 235)",
-  "rgb(255, 205, 86)",
-  "rgb(172, 115, 255)",
-  "rgb(185, 255, 79)",
-  "rgb(136, 255, 255)",
-  "rgb(136, 255, 255)",
-];
 
 interface IBalanceChartProps {
   charType: String;
@@ -115,7 +106,7 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
         const totalPrice = Number(
           Number(position.price) * Number(position.quantity)
         ).toFixed(2);
-        const color = colorsPaletteMapping[index];
+        const color = COLORS_PALETTE[index];
 
         labels.push(label);
         totalPrices.push(totalPrice);
@@ -183,7 +174,7 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
         <span className="breadcrumbs">
           {TITLES.ACCOUNT + " > " + TITLES.CURRENT_BALANCE}
         </span>
-        <h3 className="ion-text-center">{TITLES.CURRENT_BALANCE}</h3>
+        <h4 className="ion-text-center">{TITLES.CURRENT_BALANCE}</h4>
         {currentBalance !== "" && (
           <h1 className="ion-text-center">Total : {currentBalance}</h1>
         )}
