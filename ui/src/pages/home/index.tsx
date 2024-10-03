@@ -66,10 +66,6 @@ const Home: React.FC = () => {
   };
 
   useEffect(() => {
-    console.log("--- HOME MOUNTED ---");
-  }, []);
-
-  useEffect(() => {
     setShowLoading(isAssetsLoading || isPortfolioLoading);
   }, [isAssetsLoading, isPortfolioLoading]);
 
