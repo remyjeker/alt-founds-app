@@ -40,7 +40,7 @@ const buildRequestConfig = (
   };
 };
 
-const generateErrorMessage = (error: GlobalErrorResponse): String => {
+const generateErrorMessage = (error: GlobalErrorResponse): string => {
   const { response, status } = error;
   const errorMessage = response?.data?.message || ERROR_CODES.UNKNOWN;
 

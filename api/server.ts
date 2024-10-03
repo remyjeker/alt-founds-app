@@ -34,12 +34,12 @@ const db = await JSONFilePreset<DbData>("db.json", defaultData);
 
 const getUser = (
   users: UserProfile[],
-  username: String
+  username: string
 ): UserProfile | null => {
   return users.find((user: UserProfile) => user.username === username) || null;
 };
 
-const isPasswordMatching = (user: UserProfile, password: String): Boolean => {
+const isPasswordMatching = (user: UserProfile, password: string): boolean => {
   return Boolean(user.password === password);
 };
 
@@ -120,7 +120,7 @@ app.get(
 
     const { portfolios }: DbData = db.data;
 
-    const userPorfolio: Portfolio | null = portfolios[String(userId)] || null;
+    const userPorfolio: Portfolio | null = portfolios?.[userId] || null;
 
     if (!userPorfolio) {
       return res.status(ERROR_STATUS.NOT_FOUND).json({

@@ -28,7 +28,7 @@ const HistoryChart: React.FC<IHistoryChartProps> = ({
 
   const [chart, setChart] = useState<any>(null);
 
-  const getAssetLabel = (assetId: String): String => {
+  const getAssetLabel = (assetId: string): string => {
     const index: number = [...assets].findIndex(
       (asset: Asset) => asset.id === assetId
     );
@@ -46,9 +46,9 @@ const HistoryChart: React.FC<IHistoryChartProps> = ({
     const { positions } = portfolio as Portfolio;
     const positionsLength: number = positions.length;
 
-    let globalXChart: String[] = [];
+    let globalXChart: string[] = [];
     let totalYChart: number[] = [];
-    let assetsYChart: any = [];
+    let assetsYChart: any[] = [];
     let amountAtTransactionTime: number = 0;
 
     positions.forEach((position: Position, positionIndex: number) => {

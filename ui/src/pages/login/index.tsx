@@ -118,7 +118,7 @@ const Login: React.FC = () => {
             <IonAlert
               isOpen={showErrorMessage}
               header="Authentication failed"
-              message={String(errorMessage)}
+              message={errorMessage}
               buttons={["Dismiss"]}
               onDidDismiss={() => setShowErrorMessage(false)}
             />
