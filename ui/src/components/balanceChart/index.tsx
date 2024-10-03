@@ -1,8 +1,9 @@
 import { useState, useEffect, useRef } from "react";
 import { IonContent, IonItem, IonSelect, IonSelectOption } from "@ionic/react";
+
 import Chart from "chart.js/auto";
 
-import { Asset, Portfolio } from "../../../../common/types";
+import { Asset, Portfolio, Position } from "../../../../common/types";
 import { CURRENT_CURRENCY, TITLES } from "../../../../common/constants";
 
 import "./styles.css";
@@ -26,20 +27,22 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
   assets = [],
   portfolio = null,
 }) => {
-  let currentChart: Chart<any> | null = null;
-
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
-  const [currentBalance, setCurrentBalance] = useState<String>("");
-
+  const [myChart, setMyChart] = useState<any>(null);
   const [selectedAsset, setSelectedAsset] = useState<String | null>(null);
+  const [currentBalance, setCurrentBalance] = useState<String>("");
+  const [userAssetClasses, setUserAssetClasses] = useState<String[]>([]);
+
+  const getFormatedCurrencyPrice = (value: number): String => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: CURRENT_CURRENCY,
+    }).format(value);
+  };
 
   const generateCurrentBalance = (): void => {
-    if (!portfolio) {
-      return;
-    }
-
-    let sum: number = 0;
+    let amount: number = 0;
 
     const { positions } = portfolio as Portfolio;
 
@@ -48,15 +51,24 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
         Number(position.price) * Number(position.quantity)
       );
 
-      sum += positionAmount;
+      amount += positionAmount;
     });
 
-    const formatedCurrentBalance = new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: CURRENT_CURRENCY,
-    }).format(sum);
+    setCurrentBalance(getFormatedCurrencyPrice(amount));
+  };
 
-    setCurrentBalance(formatedCurrentBalance);
+  const defineUniqueAssetClasses = () => {
+    const { positions } = portfolio as Portfolio;
+
+    let userAssetIds: String[] = [];
+
+    positions.forEach((position: Position) => {
+      if (!userAssetIds.includes(position.asset)) {
+        userAssetIds.push(position.asset);
+      }
+    });
+
+    setUserAssetClasses(userAssetIds);
   };
 
   const getAssetLabel = (assetId: String): String => {
@@ -73,7 +85,7 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
     return assetId;
   };
 
-  const generateChartDataSet = () => {
+  const generateChartDataSet = (assetId: String | null = null) => {
     const { positions } = portfolio as Portfolio;
 
     let labels: String[] = [];
@@ -81,19 +93,18 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
     let colors: String[] = [];
 
     positions
-      .filter((position) =>
-        Boolean(!selectedAsset || position.asset === selectedAsset)
+      .filter((position: Position) =>
+        Boolean(!assetId || position.asset === assetId)
       )
-      .forEach((position, index) => {
+      .forEach((position: Position, index: number) => {
         const label = getAssetLabel(position.asset);
-        labels.push(label);
-
         const totalPrice = Number(
           Number(position.price) * Number(position.quantity)
-        );
-        totalPrices.push(totalPrice.toFixed(2));
-
+        ).toFixed(2);
         const color = colorsPaletteMapping[index];
+
+        labels.push(label);
+        totalPrices.push(totalPrice);
         colors.push(color);
       });
 
@@ -110,41 +121,48 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
     };
   };
 
-  const generateChart = () => {
-    currentChart = new Chart(canvasRef?.current, {
+  const generateChart = (assetId: String | null = null) => {
+    if (myChart) {
+      myChart.data = generateChartDataSet(assetId);
+      myChart.update();
+
+      return;
+    }
+
+    if (canvasRef?.current?.attributes?.length) {
+      return;
+    }
+
+    let newChart = new Chart(canvasRef?.current, {
       type: "doughnut",
       data: generateChartDataSet(),
     });
-  };
 
-  const destroyChart = () => {
-    if (currentChart) {
-      currentChart.destroy();
-
-      return true;
-    }
+    setMyChart(newChart);
   };
 
   useEffect(() => {
     return () => {
-      destroyChart();
+      if (myChart) {
+        myChart.destroy();
+      }
     };
   }, []);
 
   useEffect(() => {
     if (assets && assets?.length && portfolio) {
+      defineUniqueAssetClasses();
       generateCurrentBalance();
       generateChart();
     }
   }, [assets, portfolio]);
 
   const handleSelectedAssetChange = (event: CustomEvent) => {
-    setSelectedAsset(event?.detail?.value);
+    const selectedAssetId: String = event?.detail?.value;
 
-    // TODO: Verify update
-    if (destroyChart()) {
-      generateChart();
-    }
+    setSelectedAsset(selectedAssetId);
+
+    generateChart(selectedAssetId);
   };
 
   return (
@@ -157,20 +175,26 @@ const BalanceChart: React.FC<IBalanceChartProps> = ({
         {currentBalance !== "" && (
           <h1 className="ion-text-center">{currentBalance}</h1>
         )}
-        <IonItem className="ion-margin-top ion-padding-horizontal">
-          <IonSelect
-            color={"dark"}
-            aria-label="asset"
-            placeholder="Select asset class..."
-            onIonChange={handleSelectedAssetChange}
-            value={selectedAsset}
-          >
-            <IonSelectOption value={null}>ALL</IonSelectOption>
-            {assets.map((asset: Asset) => (
-              <IonSelectOption value={asset.id}>{asset.name}</IonSelectOption>
-            ))}
-          </IonSelect>
-        </IonItem>
+        <div className="asset-class-filter-container">
+          <IonItem className="ion-margin-top ion-padding-horizontal">
+            <IonSelect
+              color={"dark"}
+              aria-label="asset"
+              placeholder="Select asset class..."
+              onIonChange={handleSelectedAssetChange}
+              value={selectedAsset}
+            >
+              <IonSelectOption value={null}>ALL ASSET CLASSES</IonSelectOption>
+              {assets
+                .filter((asset: Asset) => userAssetClasses.includes(asset.id))
+                .map((asset: Asset, index) => (
+                  <IonSelectOption key={index} value={asset.id}>
+                    {asset.name}
+                  </IonSelectOption>
+                ))}
+            </IonSelect>
+          </IonItem>
+        </div>
         <div className="chart-container">
           <canvas ref={canvasRef} />
         </div>

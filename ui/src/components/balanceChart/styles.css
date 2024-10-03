@@ -1,5 +1,17 @@
+.asset-class-filter-container {
+  width: 50%;
+  margin: 0 auto;
+}
+
 .chart-container {
-  width: 400px;
-  min-width: 400px;
+  width: 50%;
+  min-width: 300px;
+  max-width: 600px;
   margin: 20px auto;
+}
+
+@media only screen and (max-width: 600px) {
+  .asset-class-filter-container {
+    width: 100%;
+  }
 }

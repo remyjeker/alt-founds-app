@@ -2,6 +2,8 @@
 http://ionicframework.com/docs/theming/ */
 
 :root {
+  --mobile-width: 600px;
+
   --base-bgColor: #343434;
   --lighweight-bgColor: #999999;
   --lighweight-color: #808080;
