@@ -15,3 +15,6 @@ Frontend Coding Task
 - Frontend application is supposed to start on: [http://localhost:8100](http://localhost:8100)
 - Enter credentials : username="admin", password="adminpass".
 - Have a look on your financial porfolio !
+
+# Overview
+<img width="948" alt="Capture d’écran 2024-10-04 à 00 56 59" src="https://github.com/user-attachments/assets/fd1562ab-0c32-4944-a55d-5f68ddcee774">
