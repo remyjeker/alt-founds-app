@@ -29,10 +29,8 @@ const pageTitle = TITLES.MAIN + " / Connect";
 const Login: React.FC = () => {
   const history = useHistory();
 
-  // const [username, setUsername] = useState<string>("");
-  // const [password, setPassword] = useState<string>("");
-  const [username, setUsername] = useState<string>("admin");
-  const [password, setPassword] = useState<string>("adminpass");
+  const [username, setUsername] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
 
   const [hasCredentials, setHasCredentials] = useState<boolean>(false);
 
@@ -72,8 +70,6 @@ const Login: React.FC = () => {
       .catch((errorMessage: string) => {
         setErrorMessage(errorMessage);
         setShowErrorMessage(true);
-
-        return;
       });
   };
 

@@ -51,9 +51,7 @@ const generateErrorMessage = (error: GlobalErrorResponse): String => {
   );
 };
 
-export const login = async (
-  params: LoginParams
-): Promise<UserProfile | String> => {
+export const login = async (params: LoginParams): Promise<UserProfile> => {
   return new Promise(async (resolve, reject) => {
     await axiosClient
       .post("login", params)
@@ -70,7 +68,7 @@ export const login = async (
   });
 };
 
-export const getAssets = async (): Promise<Asset[] | String> => {
+export const getAssets = async (): Promise<Asset[]> => {
   return new Promise(async (resolve, reject) => {
     const requestConfig = buildRequestConfig();
 
@@ -87,10 +85,9 @@ export const getAssets = async (): Promise<Asset[] | String> => {
   });
 };
 
-export const getPortfolio = async (): Promise<Portfolio | String> => {
+export const getPortfolio = async (): Promise<Portfolio> => {
   return new Promise(async (resolve, reject) => {
     const userId = getCurrentUserId() || "";
-    // TODO: Params Or Today
     const todayDate = moment().format("YYYY/MM/DD") || "";
 
     const requestConfig = buildRequestConfig({

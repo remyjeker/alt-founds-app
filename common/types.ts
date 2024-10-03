@@ -89,12 +89,12 @@ export type Position = {
   id: String;
   asset: String;
   quantity: Number;
-  asOf: String;
+  asOf: Number;
   price: Number;
 };
 
 export type Portfolio = {
   id: String;
-  asOf: String;
+  asOf: Number;
   positions: Position[];
 };
