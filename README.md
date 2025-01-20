@@ -1,13 +1,13 @@
-# vega-app
-Frontend Coding Task
+# alt-founds-app
+Alternatives founds management app
 
 # Prerequisites:
 - Have NodeJs at least with version : 18.17.0
 
 # Procedure
 - Download Zip file of the repository (branch 'main')
-- Unzip the file 'vega-app-main.zip'
-- Open you terminal, and access to the root directory of the freshly unziped folder 'vega-app-main'
+- Unzip the Zip file
+- Open you terminal, and access to the root directory of the freshly unziped folder
 - First, run command 'npm i'
 - Wait...
 - Then, run command 'npm run init'
